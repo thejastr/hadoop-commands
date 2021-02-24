@@ -1,0 +1,130 @@
+>jps
+
+ To evaluate a query in sqoop without importing the data into hdfs:
+command:sqoop eval --query 'SELECT * from departments' --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr
+
+To list all the databases:
+>sqoop list-databases --connect jdbc:mysql://localhost --username thejas --password thejastr
+
+To list tables in a particular db
+>sqoop list-tables --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password 1234567890
+
+check the files:
+another terminal >hdfs dfs -ls /
+
+To dump partial data using constraints
+>sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --table departments --target-dir /partial --where 'department_id>3'
+
+To check the file content
+>hdfs dfs -cat /partial/part*
+
+To upload files
+>hdfs dfs -put abd_commands.txt /commands
+
+To dump the files of a table this target dir dumps everything in a single folder
+>sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --table orders --target-dir /testtable
+> in browser localhost:9850  
+just check the files
+
+hdfs dfs -mkdir /retail
+create directory
+hdfs dfs -ls /
+
+To dump the files a sit is it dumps sequentially 
+>sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --table orders --warehouse-dir /retail
+
+hdfs dfs -ls /retail
+check orders in reail directory 
+hdfs dfs -ls /retail/oders
+
+>dump the another table coustomer
+>sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --table customers --warehouse-dir /retail
+
+ hdfs dfs -ls /retail/ 
+checking orders nd coustomers is present
+
+To import partial data based on columns
+
+
+:::::last class::::
+create database testdb;
+use testdb;
+ use retail;
+ show tables;
+ use testdb;
+create table departments(department_id int,department_name varchar(45));
+show tables;
+
+another terminal start dfs and yarn
+
+> sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --table departments --target-dir /dpt
+
+go back mysql
+
+select * from departments;
+
+>sqoop export --connect jdbc:mysql://localhost/testdb?useSSL=false --username thejas --password thejastr --table departments --export-dir /dpt
+
+select * from departments;
+
+To import partial data based on columns
+>sqoop import --connect jdbc:mysql://localhost/retail?useSSL=false --username thejas --password thejastr --columns product_id,product_name,product_price --table products --target-dir /products
+
+localhost:9870 just check the files information about price id ect...
+
+:::::::::::hive::::::::::
+
+
+jps
+hdfs dfs -ls /
+hdfs dfs -ls /user
+hdfs dfs -ls /user/hive
+hdfs dfs -ls /user/hive/warehouse
+hdfs dfs -ls /retail
+ output:-customers and orders in retail
+import all the items from retail_db to retail
+hdfs dfs -ls /retail/orders
+
+
+hive command
+show tables; just checking nothing is tr
+
+in mysql 
+use retail database
+show tables
+describe categories;
+
+
+in hive
+
+>create table categories(categories_id int, categories_department_id int, categories_name varchar(45)) row format delimited fields terminated by ',' stored as textfile;
+>show tables;
+>select * from categories;
+
+in hdfs
+
+>hdfs dfs -ls /user/hive/warehouse/categories        :-output empty
+>hdfs dfs -ls /retail/    :-checking categories is present
+ >hdfs dfs -ls /user/hive/warehouse
+
+in hive
+
+> load data inpath '/retail/categories' into table categories;
+ output:-loaded into default categories
+>select * from categories;
+ output:-some 58 items
+
+in hdfs
+
+>hdfs dfs -ls /retail/categories
+output:-only one item is tr before loaded into hive categorie table tr we will found 4 items
+
+>cat bat.txt
+contains data like csv file with data,data type
+
+In hive 
+>load data local inpath '/home/................./bat.txt' into table batting
+This command appends the data if there is data alredy exists
+
+to overwrite
+>load data local inpath '/home/................./bat.txt' overwrite into table batting
